@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>User page</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+
+<body>
+<header class="container-fluid bg-dark">
+    <div class="row">
+        <div class="col-4 d-flex align-items-center">
+            <span class="text-white  align-items-center" id="current_user_email"></span>
+            <span class="text-white align-items-center">&nbsp;with role:&nbsp;</span>
+            <span class="text-white align-items-center" id="current_user_roles"></span>
+        </div>
+        <div class="col-4"></div>
+        <div class="col-4">
+            <form class="d-flex justify-content-end" method="post" action="/logout">
+                <input class="text-muted btn btn-dark" type="submit" value="Logout">
+            </form>
+        </div>
+    </div>
+</header>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2 p-0 pt-3">
+            <ul class="list-group">
+                <a href="#" th:href="@{/user}"
+                   class="list-group-item list-group-item-action active">
+                    User
+                </a>
+                <a sec:authorize="hasRole('ADMIN')" href="/admin"
+                   class="list-group-item list-group-item-action">
+                    Admin
+                </a>
+            </ul>
+        </div>
+        <div class="col-10">
+            <p>
+            <h1 class="text-weight-bold">User information-page</h1>
+            </p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th colspan="6" scope="col" class="border-start">About user</th>
+                </tr>
+                </thead>
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Firs Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Role</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous">
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous">
+</script>
+
+<script>
+
+    //current user
+    fetch("http://localhost:8080/user/current_user")
+        .then(data => data.json())
+        .then(currentUser => {
+            $("#current_user_email").text(currentUser.username);
+            let userRoles = "";
+            for (let key in currentUser.roles) {
+                userRoles += `${currentUser.roles[key].roleWithoutPref} `;
+            }
+            $("#current_user_roles").text(userRoles);
+            addUserToUserTable(currentUser);
+        });
+
+    //creat user row
+    let addUserToUserTable = user => {
+        let userTable = document.querySelector('.table');
+        //user row
+        let row = userTable.insertRow(userTable.rows.length);
+        row.setAttribute("id", user.id);
+        //user id
+        let idCell = row.insertCell(0);
+        idCell.setAttribute("name", "id");
+        idCell.setAttribute("class", "font-weight-normal");
+        idCell.setAttribute("scope", "col");
+        idCell.innerHTML = user.id;
+        //user first name
+        let firstNameCell = row.insertCell(1);
+        firstNameCell.setAttribute("name", "firstName");
+        firstNameCell.setAttribute("class", "font-weight-normal");
+        firstNameCell.setAttribute("scope", "col");
+        firstNameCell.innerHTML = user.firstName;
+        //user last name
+        let lastNameCell = row.insertCell(2);
+        lastNameCell.setAttribute("name", "lastName");
+        lastNameCell.setAttribute("class", "font-weight-normal");
+        lastNameCell.setAttribute("scope", "col");
+        lastNameCell.innerHTML = user.lastName;
+        //user age
+        let ageCell = row.insertCell(3);
+        ageCell.setAttribute("name", "age");
+        ageCell.setAttribute("class", "font-weight-normal");
+        ageCell.setAttribute("scope", "col");
+        ageCell.innerHTML = user.age;
+        //user email
+        let emailCell = row.insertCell(4);
+        emailCell.setAttribute("name", "email");
+        emailCell.setAttribute("class", "font-weight-normal");
+        emailCell.setAttribute("scope", "col");
+        emailCell.innerHTML = user.username;
+        //user roles
+        let roleCell = row.insertCell(5);
+        roleCell.setAttribute("name", "role");
+        roleCell.setAttribute("class", "font-weight-normal");
+        roleCell.setAttribute("scope", "col");
+        let userRoles = "";
+        for (let key in user.roles) {
+            userRoles += `${user.roles[key].roleWithoutPref} `;
+        }
+        roleCell.innerHTML = userRoles;
+    }
+</script>
+</body>
+
+</html>
