@@ -18,24 +18,13 @@ import java.util.List;
 public class AdminRestController {
 
     private UserService userServiceImpl;
-    private RoleService roleServiceImpl;
 
     @Autowired
-    public AdminRestController(UserService userServiceImpl,
-                               RoleService roleServiceImpl) {
+    public AdminRestController(UserService userServiceImpl) {
         this.userServiceImpl = userServiceImpl;
-        this.roleServiceImpl = roleServiceImpl;
     }
 
-    @GetMapping("/all_roles")
-    public ResponseEntity<List<Role>> getAllRoles() {
-        List<Role> roleList = roleServiceImpl.readRoles();
-        return (roleList != null)
-                ? new ResponseEntity<>(roleList, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
-    }
-
-    @GetMapping("/all_users")
+    @GetMapping("/user")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> userList = userServiceImpl.readAll();
         return (userList != null)
@@ -43,7 +32,7 @@ public class AdminRestController {
                 : new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
     }
 
-    @PostMapping("/add_user")
+    @PostMapping("/user")
     public ResponseEntity<User> addNewUser(@RequestBody User user) {
         User newUser = userServiceImpl.addUser(user);
         return (newUser != null)
@@ -51,7 +40,7 @@ public class AdminRestController {
                 : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @PutMapping("/update_user")
+    @PutMapping("/user")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         System.out.println(user);
         User newUser = userServiceImpl.updateUser(user);
@@ -60,7 +49,7 @@ public class AdminRestController {
                 : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @DeleteMapping("/delete_user")
+    @DeleteMapping("/user")
     public ResponseEntity<Long> deleteUser(@RequestBody long id) {
         try {
             System.out.println(id);

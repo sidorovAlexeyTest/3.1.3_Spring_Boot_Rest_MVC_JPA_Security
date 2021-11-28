@@ -183,7 +183,7 @@
                     });
 
                 //fill users table
-                fetch("http://localhost:8080/admin/all_users")
+                fetch("http://localhost:8080/admin/user")
                     .then(data => data.json())
                     .then(userList => {
                         userList.forEach(user => {
@@ -331,7 +331,7 @@
                     modalFormData.forEach((value, key) => newUser[key] = value);
                     newUser.stringRoles = newUserRoles;
                     newUser.id = $("#user-id").val();
-                    fetch("http://localhost:8080/admin/update_user", {
+                    fetch("http://localhost:8080/admin/user", {
                         method: 'PUT',
                         headers: {
                             'Content-type' : 'application/json; charset=utf-8'
@@ -350,7 +350,7 @@
                 function deleteUser(event) {
                     event.preventDefault();
                     const deleteUserId = document.querySelector('#user-id').value;
-                    fetch("http://localhost:8080/admin/delete_user", {
+                    fetch("http://localhost:8080/admin/user", {
                         method: 'DELETE',
                         headers: {
                             'Content-type' : 'application/json; charset=utf-8'
@@ -387,7 +387,7 @@
                     let modalFormData = new FormData(my_modal_form);
                     modalFormData.forEach((value, key) => newUser[key] = value);
                     newUser.stringRoles = newUserRoles;
-                    fetch("http://localhost:8080/admin/add_user", {
+                    fetch("http://localhost:8080/admin/user", {
                         method: 'POST',
                         headers: {
                             'Content-type' : 'application/json; charset=utf-8'
